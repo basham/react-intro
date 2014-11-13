@@ -14,6 +14,99 @@
 
     <script type="text/jsx">
       /** @jsx React.DOM */
+
+      var App = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <Demo/>
+              <Profile greeting="Greetings!"/>
+            </div>
+          );
+        }
+      });
+
+      var UserStoreMixin = {
+        getInitialState: function() {
+          return {
+            name: 'Bubba'
+          }
+        }
+      };
+
+      var Demo = React.createClass({
+
+        mixins: [UserStoreMixin],
+
+        onChange: function(event) {
+          this.setState({
+            name: event.target.value
+          });
+        },
+
+        render: function() {
+          return (
+            <div>
+              <label htmlFor="nameInput">Name</label>
+              <input id="nameInput" type="text" onChange={this.onChange} value={this.state.name}/>
+              <span>{this.state.name}</span>
+            </div>
+          );
+        }
+
+      });
+
+      var Profile = React.createClass({
+
+        getInitialState: function() {
+          return {
+            user: {
+              name: 'Chris Basham',
+              username: 'basham',
+              avatar_url: 'https://avatars3.githubusercontent.com/u/347558?v=3&s=460',
+              followers: 10,
+              repositories: 20,
+              following: 25
+            }
+          };
+        },
+
+        componentDidMount: function() {
+        },
+
+        render: function() {
+
+          var stats = [
+            { name: 'Followers', key: 'followers' },
+            { name: 'Repositories', key: 'repositories' },
+            { name: 'Following', key: 'following' }
+          ].map(function(item) {
+            return (
+              <div>
+                <h4>{this.state.user[item.key]}</h4>
+                <small>{item.name}</small>
+              </div>
+            );
+          }.bind(this));
+
+          return (
+            <div>
+              <section className="user">
+                <img src="{this.state.user.avatar_url}" className="avatar"/>
+                <h2>{this.props.greeting} {this.state.user.name}</h2>
+                <h4>{this.state.user.username}</h4>
+              </section>
+              <section className="stats">
+                {stats}
+              </section>
+            </div>
+          );
+        }
+
+      });
+
+      React.render(<App/>, document.body);
+
     </script>
 
   </body>
